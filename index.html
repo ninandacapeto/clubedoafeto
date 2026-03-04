@@ -348,7 +348,7 @@
       letter-spacing: 4px;
     }
 
-    /* Logo estilizada - agora editável via URL */
+    /* Logo estilizada */
     .logo-container {
       text-align: center;
       margin-bottom: 1.5rem;
@@ -426,12 +426,12 @@
       <p>Digite a senha para editar:</p>
       <input type="password" id="senhaAdmin" placeholder="senha" maxlength="20">
       <button class="btn-secundario" id="btnVerificarSenha" style="font-size:1.2rem; padding:0.8rem 2rem; min-width:auto;">Entrar</button>
-      <p style="font-size:0.9rem; margin-top:1rem;">dica: a senha é <strong>afeto2025</strong></p>
+      <!-- DICA DA SENHA REMOVIDA -->
     </div>
   </div>
 
   <div class="container">
-    <!-- LOGO NO TOPO - agora com ID para podermos alterar a imagem -->
+    <!-- LOGO NO TOPO -->
     <div class="logo-container">
       <img src="https://i.imgur.com/i76YgZr.png" alt="Logotipo Clube do Afeto" class="logo-clube" id="logoClube">
     </div>
@@ -645,16 +645,12 @@
       function atualizarLogo() {
         const novaUrl = novaLogoUrl.value.trim();
         if (novaUrl) {
-          // Atualiza a logo principal
           logoClube.src = novaUrl;
-          // Atualiza a prévia
           previewLogo.src = novaUrl;
         }
       }
 
       btnAtualizarLogo.addEventListener('click', atualizarLogo);
-
-      // Também atualiza a prévia quando o campo muda (opcional)
       novaLogoUrl.addEventListener('input', () => {
         previewLogo.src = novaLogoUrl.value;
       });

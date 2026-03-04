@@ -479,38 +479,31 @@
       </div>
     </div>
 
-    <!-- ETAPA 2: Formulário simples - VERSÃO COM FORMSUBMIT.CO -->
-    <div id="etapa2" class="etapa">
-      <div class="card">
-        <h2 class="editavel-admin" id="tituloFormulario" contenteditable="false">✨ Preencha seus dados</h2>
-        <p class="texto-ajuda editavel-admin" id="textoFormulario" contenteditable="false">É rápido e fácil. Depois disso, você verá o valor e o link para pagamento.</p>
+   <!-- ETAPA 2: Formulário com Google Forms -->
+<div id="etapa2" class="etapa">
+  <div class="card" style="text-align: center;">
+    <h2 class="editavel-admin" id="tituloFormulario" contenteditable="false">✨ Preencha seus dados</h2>
+    <p class="texto-ajuda editavel-admin" id="textoFormulario" contenteditable="false">Clique no botão abaixo para se inscrever:</p>
 
-        <!-- Mensagem de sucesso (começa escondida) -->
-        <div class="sucesso-mensagem" id="mensagemSucesso">
-          ✅ Enviado com sucesso! Agora confirme seus dados.
-        </div>
+    <!-- BOTÃO DO GOOGLE FORMS - COLE SEU LINK AQUI -->
+    <a href="https://forms.gle/5Mn5B5DrfXeqZf9E6" target="_blank" class="btn btn-secundario" style="font-size:1.8rem; margin:2rem 0;">
+      📝 Abrir formulário de inscrição
+    </a>
 
-        <form id="formInscricao" action="https://formsubmit.co/ninandacapetohammer@gmai.com" method="POST">
-          <!-- Campo para onde enviar (substitua pelo seu email) -->
-          <input type="hidden" name="_to" value="ninandacapetohammer@gmail.com">
-          <input type="hidden" name="_subject" value="Nova inscrição Clube do Afeto">
-          <input type="hidden" name="_next" value="https://ninandacapeto.github.io/clubedoafeto/">
-          <input type="hidden" name="_captcha" value="false">
-          
-          <div class="campo">
-            <label for="nome">Nome completo</label>
-            <input type="text" id="nome" name="Nome" placeholder="Ex: Maria da Silva" required>
-          </div>
-          <div class="campo">
-            <label for="whatsapp">WhatsApp <span style="font-weight:normal;">(com DDD)</span></label>
-            <input type="tel" id="whatsapp" name="WhatsApp" placeholder="Ex: (21)99999-9999" required>
-          </div>
-
-          <button type="submit" class="btn btn-secundario" id="btnConfirmar" style="font-size:1.8rem;">✅ Confirmar e continuar</button>
-        </form>
-        <p class="editavel-admin" id="textoRodapeForm" contenteditable="false" style="margin-top:1.5rem; font-size:1.1rem;">🔒 seus dados são seguros — usaremos apenas para confirmar sua vaga.</p>
-      </div>
+    <div style="background: #e8f0fe; border-radius: 60px; padding: 1.5rem; margin: 1.5rem 0;">
+      <p style="font-size:1.3rem; margin-bottom:1rem;">
+        ✅ <strong>Já preencheu o formulário?</strong>
+      </p>
+      <button class="btn btn-pagamento" id="btnJaPreenchi" style="font-size:1.8rem; padding:1rem 2rem;">
+        👉 Continuar para o ingresso
+      </button>
     </div>
+
+    <p class="editavel-admin" id="textoRodapeForm" contenteditable="false" style="margin-top:1.5rem; font-size:1.1rem;">
+      🔒 seus dados vão direto para nossa planilha de controle
+    </p>
+  </div>
+</div>
 
     <!-- ETAPA 3: Ingresso e pagamento -->
     <div id="etapa3" class="etapa">

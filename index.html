@@ -413,6 +413,21 @@
       padding: 5px;
       background: white;
     }
+
+    /* Mensagem de sucesso */
+    .sucesso-mensagem {
+      display: none;
+      background: #d4edda;
+      color: #155724;
+      padding: 1rem;
+      border-radius: 60px;
+      margin-bottom: 1rem;
+      text-align: center;
+      font-weight: bold;
+    }
+    .sucesso-mensagem.visivel {
+      display: block;
+    }
   </style>
 </head>
 <body>
@@ -464,23 +479,31 @@
       </div>
     </div>
 
-    <!-- ETAPA 2: Formulário simples - VERSÃO COM NETLIFY FORMS -->
+    <!-- ETAPA 2: Formulário simples - VERSÃO COM FORMSUBMIT (JÁ CONFIGURADO) -->
     <div id="etapa2" class="etapa">
       <div class="card">
         <h2 class="editavel-admin" id="tituloFormulario" contenteditable="false">✨ Preencha seus dados</h2>
         <p class="texto-ajuda editavel-admin" id="textoFormulario" contenteditable="false">É rápido e fácil. Depois disso, você verá o valor e o link para pagamento.</p>
 
-        <form id="formInscricao" name="inscricao-clube" method="POST" data-netlify="true">
-          <!-- Campo obrigatório para o Netlify identificar o formulário -->
-          <input type="hidden" name="form-name" value="inscricao-clube" />
+        <!-- Mensagem de sucesso (começa escondida) -->
+        <div class="sucesso-mensagem" id="mensagemSucesso">
+          ✅ Enviado com sucesso! Agora confirme seus dados.
+        </div>
+
+        <form id="formInscricao" action="https://formsubmit.io/send/contato@clubedoafeto.com" method="POST">
+          <!-- Campo para onde enviar (substitua pelo seu email depois) -->
+          <input type="hidden" name="_to" value="contato@clubedoafeto.com">
+          <input type="hidden" name="_subject" value="Nova inscrição Clube do Afeto">
+          <input type="hidden" name="_next" value="https://ninandacapeto.github.io/clubedoafeto/">
+          <input type="hidden" name="_captcha" value="false">
           
           <div class="campo">
             <label for="nome">Nome completo</label>
-            <input type="text" id="nome" name="nome" placeholder="Ex: Maria da Silva" required>
+            <input type="text" id="nome" name="Nome" placeholder="Ex: Maria da Silva" required>
           </div>
           <div class="campo">
             <label for="whatsapp">WhatsApp <span style="font-weight:normal;">(com DDD)</span></label>
-            <input type="tel" id="whatsapp" name="whatsapp" placeholder="(21) 97058-9449" required>
+            <input type="tel" id="whatsapp" name="WhatsApp" placeholder="(21) 97058-9449" required>
           </div>
 
           <button type="submit" class="btn btn-secundario" id="btnConfirmar" style="font-size:1.8rem;">✅ Confirmar e continuar</button>
@@ -557,7 +580,6 @@
   </div>
 
   <script>
-    // ===== FUNCIONALIDADES DO FORMULÁRIO COM NETLIFY =====
     (function() {
       // ===== CONFIGURAÇÕES =====
       const SENHA_CORRETA = 'afeto2025'; // Você pode alterar esta senha
@@ -595,6 +617,7 @@
       const nomeExibido = document.getElementById('nomeExibido');
       const nomeInput = document.getElementById('nome');
       const whatsInput = document.getElementById('whatsapp');
+      const mensagemSucesso = document.getElementById('mensagemSucesso');
 
       // ===== FUNÇÕES DE ADMIN =====
       function ativarModoAdmin() {
@@ -682,40 +705,32 @@
         etapa3.classList.remove('ativa');
       });
 
-      // ===== FUNCIONALIDADES DO FORMULÁRIO COM NETLIFY =====
+      // ===== FUNCIONALIDADES DO FORMULÁRIO COM FORMSUBMIT =====
       formInscricao.addEventListener('submit', function(e) {
-        e.preventDefault(); // Impede o comportamento padrão
-        
         const nome = nomeInput.value.trim();
         const whats = whatsInput.value.trim();
 
         if (nome === '' || whats === '') {
+          e.preventDefault();
           alert('Por favor, preencha nome e WhatsApp para continuar.');
           return;
         }
 
-        // Envia os dados para o Netlify usando fetch (AJAX)
-        const formData = new FormData(formInscricao);
+        // Mostra mensagem de sucesso
+        mensagemSucesso.classList.add('visivel');
         
-        fetch('/', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: new URLSearchParams(formData).toString()
-        })
-        .then(response => {
-          if (response.ok) {
-            // Sucesso! Avança para a próxima etapa
-            nomeExibido.textContent = nome.split(' ')[0] + '!';
-            etapa1.classList.remove('ativa');
-            etapa2.classList.remove('ativa');
-            etapa3.classList.add('ativa');
-          } else {
-            alert('Erro ao enviar. Tente novamente.');
-          }
-        })
-        .catch(error => {
-          alert('Erro de conexão. Verifique sua internet.');
-        });
+        // Mostra o nome na próxima tela antes de enviar
+        nomeExibido.textContent = nome.split(' ')[0] + '!';
+        
+        // Aguarda um pouquinho para mostrar a mensagem
+        setTimeout(() => {
+          etapa1.classList.remove('ativa');
+          etapa2.classList.remove('ativa');
+          etapa3.classList.add('ativa');
+        }, 500);
+        
+        // O formulário vai enviar e recarregar, mas já mostramos a etapa 3
+        // O _next vai redirecionar de volta para o site
       });
 
       // ===== ATUALIZA LINK DE PAGAMENTO =====

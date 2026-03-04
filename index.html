@@ -413,21 +413,6 @@
       padding: 5px;
       background: white;
     }
-
-    /* Mensagem de sucesso */
-    .sucesso-mensagem {
-      display: none;
-      background: #d4edda;
-      color: #155724;
-      padding: 1rem;
-      border-radius: 60px;
-      margin-bottom: 1rem;
-      text-align: center;
-      font-weight: bold;
-    }
-    .sucesso-mensagem.visivel {
-      display: block;
-    }
   </style>
 </head>
 <body>
@@ -479,31 +464,31 @@
       </div>
     </div>
 
-   <!-- ETAPA 2: Formulário com Google Forms -->
-<div id="etapa2" class="etapa">
-  <div class="card" style="text-align: center;">
-    <h2 class="editavel-admin" id="tituloFormulario" contenteditable="false">✨ Preencha seus dados</h2>
-    <p class="texto-ajuda editavel-admin" id="textoFormulario" contenteditable="false">Clique no botão abaixo para se inscrever:</p>
+    <!-- ETAPA 2: Formulário com Google Forms -->
+    <div id="etapa2" class="etapa">
+      <div class="card" style="text-align: center;">
+        <h2 class="editavel-admin" id="tituloFormulario" contenteditable="false">✨ Preencha seus dados</h2>
+        <p class="texto-ajuda editavel-admin" id="textoFormulario" contenteditable="false">Clique no botão abaixo para se inscrever:</p>
 
-    <!-- BOTÃO DO GOOGLE FORMS - COLE SEU LINK AQUI -->
-    <a href="https://forms.gle/5Mn5B5DrfXeqZf9E6" target="_blank" class="btn btn-secundario" style="font-size:1.8rem; margin:2rem 0;">
-      📝 Abrir formulário de inscrição
-    </a>
+        <!-- BOTÃO DO GOOGLE FORMS - COLE SEU LINK AQUI -->
+        <a href="https://forms.gle/c46td3fu2wxnh2rdA" target="_blank" class="btn btn-secundario" style="font-size:1.8rem; margin:2rem 0;">
+          📝 Abrir formulário de inscrição
+        </a>
 
-    <div style="background: #e8f0fe; border-radius: 60px; padding: 1.5rem; margin: 1.5rem 0;">
-      <p style="font-size:1.3rem; margin-bottom:1rem;">
-        ✅ <strong>Já preencheu o formulário?</strong>
-      </p>
-      <button class="btn btn-pagamento" id="btnJaPreenchi" style="font-size:1.8rem; padding:1rem 2rem;">
-        👉 Continuar para o ingresso
-      </button>
+        <div style="background: #e8f0fe; border-radius: 60px; padding: 1.5rem; margin: 1.5rem 0;">
+          <p style="font-size:1.3rem; margin-bottom:1rem;">
+            ✅ <strong>Já preencheu o formulário?</strong>
+          </p>
+          <button class="btn btn-pagamento" id="btnJaPreenchi" style="font-size:1.8rem; padding:1rem 2rem;">
+            👉 Continuar para o ingresso
+          </button>
+        </div>
+
+        <p class="editavel-admin" id="textoRodapeForm" contenteditable="false" style="margin-top:1.5rem; font-size:1.1rem;">
+          🔒 seus dados vão direto para nossa planilha de controle
+        </p>
+      </div>
     </div>
-
-    <p class="editavel-admin" id="textoRodapeForm" contenteditable="false" style="margin-top:1.5rem; font-size:1.1rem;">
-      🔒 seus dados vão direto para nossa planilha de controle
-    </p>
-  </div>
-</div>
 
     <!-- ETAPA 3: Ingresso e pagamento -->
     <div id="etapa3" class="etapa">
@@ -606,11 +591,30 @@
       const btnVoltar = document.getElementById('btnVoltarInicio');
       
       // Elementos do formulário
-      const formInscricao = document.getElementById('formInscricao');
       const nomeExibido = document.getElementById('nomeExibido');
-      const nomeInput = document.getElementById('nome');
-      const whatsInput = document.getElementById('whatsapp');
-      const mensagemSucesso = document.getElementById('mensagemSucesso');
+
+      // ===== BOTÃO "JÁ PREENCHEU" =====
+      const btnJaPreenchi = document.getElementById('btnJaPreenchi');
+      
+      if (btnJaPreenchi) {
+        btnJaPreenchi.addEventListener('click', function() {
+          // Pede o nome da pessoa para personalizar
+          const nome = prompt("Por favor, digite seu primeiro nome para personalizarmos:", "Participante");
+          
+          if (nome && nome !== "Participante") {
+            nomeExibido.textContent = nome.split(' ')[0] + '!';
+          } else {
+            nomeExibido.textContent = 'Participante!';
+          }
+          
+          // Avança para a tela de ingresso
+          etapa1.classList.remove('ativa');
+          etapa2.classList.remove('ativa');
+          etapa3.classList.add('ativa');
+        });
+      } else {
+        console.log("Botão não encontrado");
+      }
 
       // ===== FUNÇÕES DE ADMIN =====
       function ativarModoAdmin() {
@@ -698,33 +702,6 @@
         etapa3.classList.remove('ativa');
       });
 
-      // ===== FUNCIONALIDADES DO FORMULÁRIO COM FORMSUBMIT.CO =====
-      formInscricao.addEventListener('submit', function(e) {
-        const nome = nomeInput.value.trim();
-        const whats = whatsInput.value.trim();
-
-        if (nome === '' || whats === '') {
-          e.preventDefault();
-          alert('Por favor, preencha nome e WhatsApp para continuar.');
-          return;
-        }
-
-        // Mostra mensagem de sucesso
-        mensagemSucesso.style.display = 'block';
-        
-        // Mostra o nome na próxima tela antes de enviar
-        nomeExibido.textContent = nome.split(' ')[0] + '!';
-        
-        // Aguarda um pouquinho para mostrar a mensagem
-        setTimeout(() => {
-          etapa1.classList.remove('ativa');
-          etapa2.classList.remove('ativa');
-          etapa3.classList.add('ativa');
-        }, 500);
-        
-        // O formulário vai enviar e o _next redireciona de volta
-      });
-
       // ===== ATUALIZA LINK DE PAGAMENTO =====
       function atualizaLinkPagamento() {
         let url = linkInput.value.trim();
@@ -739,11 +716,13 @@
 
       // ===== COPIAR WHATSAPP =====
       const whatsLink = document.querySelector('.whatsapp-link');
-      whatsLink.addEventListener('click', function(e) {
-        navigator.clipboard?.writeText('5521970589449').then(() => {
-          alert('Número copiado!');
-        }).catch(() => {});
-      });
+      if (whatsLink) {
+        whatsLink.addEventListener('click', function(e) {
+          navigator.clipboard?.writeText('5521970589449').then(() => {
+            alert('Número copiado!');
+          }).catch(() => {});
+        });
+      }
     })();
   </script>
 </body>

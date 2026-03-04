@@ -479,7 +479,7 @@
       </div>
     </div>
 
-    <!-- ETAPA 2: Formulário simples - VERSÃO COM FORMSUBMIT (JÁ CONFIGURADO) -->
+    <!-- ETAPA 2: Formulário simples - VERSÃO COM FORMSUBMIT.CO -->
     <div id="etapa2" class="etapa">
       <div class="card">
         <h2 class="editavel-admin" id="tituloFormulario" contenteditable="false">✨ Preencha seus dados</h2>
@@ -490,8 +490,8 @@
           ✅ Enviado com sucesso! Agora confirme seus dados.
         </div>
 
-        <form id="formInscricao" action="https://formsubmit.io/send/ninandacapetohammer@gmail.com" method="POST">
-          <!-- Campo para onde enviar (substitua pelo seu email depois) -->
+        <form id="formInscricao" action="https://formsubmit.co/ninandacapetohammer@gmai.com" method="POST">
+          <!-- Campo para onde enviar (substitua pelo seu email) -->
           <input type="hidden" name="_to" value="ninandacapetohammer@gmail.com">
           <input type="hidden" name="_subject" value="Nova inscrição Clube do Afeto">
           <input type="hidden" name="_next" value="https://ninandacapeto.github.io/clubedoafeto/">
@@ -503,7 +503,7 @@
           </div>
           <div class="campo">
             <label for="whatsapp">WhatsApp <span style="font-weight:normal;">(com DDD)</span></label>
-            <input type="tel" id="whatsapp" name="WhatsApp" placeholder="(21) 97058-9449" required>
+            <input type="tel" id="whatsapp" name="WhatsApp" placeholder="Ex: (21)99999-9999" required>
           </div>
 
           <button type="submit" class="btn btn-secundario" id="btnConfirmar" style="font-size:1.8rem;">✅ Confirmar e continuar</button>
@@ -705,7 +705,7 @@
         etapa3.classList.remove('ativa');
       });
 
-      // ===== FUNCIONALIDADES DO FORMULÁRIO COM FORMSUBMIT =====
+      // ===== FUNCIONALIDADES DO FORMULÁRIO COM FORMSUBMIT.CO =====
       formInscricao.addEventListener('submit', function(e) {
         const nome = nomeInput.value.trim();
         const whats = whatsInput.value.trim();
@@ -717,7 +717,7 @@
         }
 
         // Mostra mensagem de sucesso
-        mensagemSucesso.classList.add('visivel');
+        mensagemSucesso.style.display = 'block';
         
         // Mostra o nome na próxima tela antes de enviar
         nomeExibido.textContent = nome.split(' ')[0] + '!';
@@ -729,8 +729,7 @@
           etapa3.classList.add('ativa');
         }, 500);
         
-        // O formulário vai enviar e recarregar, mas já mostramos a etapa 3
-        // O _next vai redirecionar de volta para o site
+        // O formulário vai enviar e o _next redireciona de volta
       });
 
       // ===== ATUALIZA LINK DE PAGAMENTO =====

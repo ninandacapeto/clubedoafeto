@@ -130,6 +130,19 @@
       min-width: 250px;
     }
 
+    /* BOTÃO DE PUBLICAR (VERMELHO PARA DESTAQUE) */
+    .btn-publicar {
+      background-color: #d48f8f;
+      box-shadow: 0 6px 0 #a56f6f;
+      font-size: 1.8rem;
+      padding: 1rem 2rem;
+      min-width: 250px;
+      margin-top: 1rem;
+    }
+    .btn-publicar:hover {
+      background-color: #c47e7e;
+    }
+
     .campo {
       margin-bottom: 2rem;
       text-align: left;
@@ -435,7 +448,7 @@
       <img src="https://i.imgur.com/i76YgZr.png" alt="Logotipo Clube do Afeto" class="logo-clube" id="logoClube">
     </div>
 
-    <!-- ÁREA DO ADMIN PARA EDITAR A FOTO (só aparece no modo admin) -->
+    <!-- ÁREA DO ADMIN PARA EDITAR (agora com botão PUBLICAR) -->
     <div class="admin-section" id="adminFotoArea">
       <div class="admin-badge">📸 EDIÇÃO DA LOGO</div>
       <div class="logo-preview">
@@ -470,8 +483,8 @@
         <h2 class="editavel-admin" id="tituloFormulario" contenteditable="false">✨ Preencha seus dados</h2>
         <p class="texto-ajuda editavel-admin" id="textoFormulario" contenteditable="false">Clique no botão abaixo para se inscrever:</p>
 
-        <!-- BOTÃO DO GOOGLE FORMS - COLE SEU LINK AQUI -->
-        <a href="https://forms.gle/c46td3fu2wxnh2rdA" target="_blank" class="btn btn-secundario" style="font-size:1.8rem; margin:2rem 0;">
+        <!-- 🔴 COLE AQUI O LINK DO SEU GOOGLE FORMS 🔴 -->
+        <a href="https://forms.google.com/seu-formulario-aqui" target="_blank" class="btn btn-secundario" style="font-size:1.8rem; margin:2rem 0;">
           📝 Abrir formulário de inscrição
         </a>
 
@@ -520,11 +533,19 @@
           </div>
         </div>
 
-        <!-- Área do admin com dicas -->
+        <!-- Área do admin com dicas e BOTÃO PUBLICAR -->
         <div class="admin-section" id="adminDicas">
           <div class="admin-badge">🛠️ MODO EDIÇÃO ATIVO</div>
           <p style="font-size:1.1rem;">✏️ <strong>Clique em qualquer campo com borda para editar</strong> (textos, data, valor, lote).</p>
           <p style="font-size:1rem;">📸 Você também pode trocar a logo na seção acima.</p>
+          
+          <!-- NOVO BOTÃO PUBLICAR -->
+          <button class="btn btn-publicar" id="btnPublicar">
+            📢 Publicar alterações para todos
+          </button>
+          <p style="font-size:0.9rem; color:#8B0000; margin-top:0.5rem;">
+            ⚠️ Após publicar, todos os clientes verão as alterações
+          </p>
         </div>
 
         <!-- Botão de pagamento -->
@@ -560,7 +581,7 @@
   <script>
     (function() {
       // ===== CONFIGURAÇÕES =====
-      const SENHA_CORRETA = 'afeto2025'; // Você pode alterar esta senha
+      const SENHA_CORRETA = 'afeto2025';
       let modoAdmin = false;
 
       // ===== ELEMENTOS =====
@@ -592,28 +613,24 @@
       
       // Elementos do formulário
       const nomeExibido = document.getElementById('nomeExibido');
-
-      // ===== BOTÃO "JÁ PREENCHEU" =====
       const btnJaPreenchi = document.getElementById('btnJaPreenchi');
       
+      // NOVO: Botão publicar
+      const btnPublicar = document.getElementById('btnPublicar');
+
+      // ===== BOTÃO "JÁ PREENCHEU" =====
       if (btnJaPreenchi) {
         btnJaPreenchi.addEventListener('click', function() {
-          // Pede o nome da pessoa para personalizar
-          const nome = prompt("Por favor, digite seu primeiro nome para personalizarmos:", "Participante");
-          
-          if (nome && nome !== "Participante") {
+          const nome = prompt("Por favor, digite seu primeiro nome:", "Participante");
+          if (nome && nome !== "Participante" && nome !== null) {
             nomeExibido.textContent = nome.split(' ')[0] + '!';
           } else {
             nomeExibido.textContent = 'Participante!';
           }
-          
-          // Avança para a tela de ingresso
           etapa1.classList.remove('ativa');
           etapa2.classList.remove('ativa');
           etapa3.classList.add('ativa');
         });
-      } else {
-        console.log("Botão não encontrado");
       }
 
       // ===== FUNÇÕES DE ADMIN =====
@@ -701,6 +718,53 @@
         etapa2.classList.remove('ativa');
         etapa3.classList.remove('ativa');
       });
+
+      // ===== NOVA FUNÇÃO: PUBLICAR ALTERAÇÕES =====
+      function publicarAlteracoes() {
+        // Pega todos os textos que foram editados
+        const dadosParaSalvar = {
+          tituloPrincipal: document.getElementById('tituloPrincipal').innerText,
+          subtituloPrincipal: document.getElementById('subtituloPrincipal').innerText,
+          textoDescricao: document.getElementById('textoDescricao').innerHTML,
+          tituloFormulario: document.getElementById('tituloFormulario').innerText,
+          textoFormulario: document.getElementById('textoFormulario').innerText,
+          textoRodapeForm: document.getElementById('textoRodapeForm').innerText,
+          tituloIngresso: document.getElementById('tituloIngresso').innerText,
+          editavelNomeEvento: document.getElementById('editavelNomeEvento').innerText,
+          editavelData: document.getElementById('editavelData').innerText,
+          editavelLocal: document.getElementById('editavelLocal').innerText,
+          editavelLote: document.getElementById('editavelLote').innerText,
+          editavelValor: document.getElementById('editavelValor').innerText,
+          textoRodape: document.getElementById('textoRodape').innerText,
+          linkPagamento: document.getElementById('editavelLinkPagamento').value,
+          logoUrl: document.getElementById('logoClube').src
+        };
+
+        // Converte para JSON
+        const dadosJSON = JSON.stringify(dadosParaSalvar, null, 2);
+        
+        // Cria um arquivo para download
+        const blob = new Blob([dadosJSON], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'dados_clube_do_afeto.json';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        // Mostra instruções
+        alert('✅ Arquivo com suas alterações baixado!\n\nAgora:\n1. Acesse seu GitHub\n2. Edite o arquivo index.html\n3. Cole este conteúdo\n4. Publique');
+        
+        // Abre o GitHub em nova aba
+        window.open('https://github.com/ninandacapeto/clubedoafeto/edit/main/index.html', '_blank');
+      }
+
+      // Adiciona evento ao botão publicar
+      if (btnPublicar) {
+        btnPublicar.addEventListener('click', publicarAlteracoes);
+      }
 
       // ===== ATUALIZA LINK DE PAGAMENTO =====
       function atualizaLinkPagamento() {
